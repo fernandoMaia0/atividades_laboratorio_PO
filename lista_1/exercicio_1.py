@@ -1,28 +1,34 @@
-# Lê um arquivo com a descrição de um grafo (não-direcionado, com pesos)
-# e monta a matriz de adjacência correspondente.
+class Grafo:
+    """Representa um grafo não-direcionado e ponderado via matriz de adjacência."""
 
+    def __init__(self, num_vertices):
+        self.n = num_vertices
+        self.adj = [[0] * num_vertices for _ in range(num_vertices)]
 
-def ler_grafo(caminho):
-    with open(caminho, "r") as f:
-        n = int(f.readline().strip())
-        matriz = [[0] * n for _ in range(n)]
+    def adicionar_aresta(self, u, v, peso):
+        self.adj[u][v] = peso
+        self.adj[v][u] = peso
 
-        for linha in f:
-            if not linha.strip():
-                continue
-            origem, destino, peso = map(int, linha.split())
-            matriz[origem][destino] = peso
-            matriz[destino][origem] = peso
+    def imprimir(self):
+        largura = max(len(str(max(l))) for l in self.adj) + 1
+        for linha in self.adj:
+            print("".join(str(v).rjust(largura) for v in linha))
 
-    return matriz
+    @classmethod
+    def carregar_de_arquivo(cls, caminho):
+        with open(caminho) as arquivo:
+            linhas = [l.split() for l in arquivo if l.strip()]
 
+        n = int(linhas[0][0])
+        grafo = cls(n)
 
-def exibir_matriz(matriz):
-    for linha in matriz:
-        print(" ".join(str(v) for v in linha))
+        for u, v, peso in linhas[1:]:
+            grafo.adicionar_aresta(int(u), int(v), int(peso))
+
+        return grafo
 
 
 if __name__ == "__main__":
-    matriz_adjacencia = ler_grafo("grafo.txt")
+    g = Grafo.carregar_de_arquivo("grafo.txt")
     print("Matriz de Adjacência:")
-    exibir_matriz(matriz_adjacencia)
+    g.imprimir()

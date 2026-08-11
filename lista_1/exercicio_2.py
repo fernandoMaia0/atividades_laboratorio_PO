@@ -1,22 +1,13 @@
-# Lê o mesmo grafo do exercício 1 e calcula o grau de cada vértice
-# (quantidade de arestas incidentes, considerando apenas se ha ou nao aresta).
-
-from exercicio_1 import ler_grafo
+from exercicio_1 import Grafo
 
 
-def calcular_graus(matriz):
-    n = len(matriz)
-    graus = []
-    for i in range(n):
-        grau = sum(1 for j in range(n) if matriz[i][j] > 0)
-        graus.append(grau)
-    return graus
+def grau_do_vertice(grafo, vertice):
+    return sum(1 for peso in grafo.adj[vertice] if peso != 0)
 
 
 if __name__ == "__main__":
-    matriz_adjacencia = ler_grafo("grafo.txt")
-    graus = calcular_graus(matriz_adjacencia)
+    g = Grafo.carregar_de_arquivo("grafo.txt")
 
     print("Grau de cada vértice:")
-    for vertice, grau in enumerate(graus):
-        print(f"Vértice {vertice}: grau {grau}")
+    for v in range(g.n):
+        print(f"Vértice {v}: grau {grau_do_vertice(g, v)}")
